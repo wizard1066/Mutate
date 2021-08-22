@@ -163,7 +163,7 @@ class GameScene2: SKScene {
       var basic:Int64 = 0
       var bitMask:Int64 = 1
       for c in 0..<tileMap.numberOfColumns {
-        if tileMap.tileGroup(atColumn: c, row: r)?.name == "red" {
+        if tileMap.tileGroup(atColumn: c, row: r)?.name != "black" {
           basic = basic | bitMask
         }
         bitMask = bitMask << 1
@@ -171,20 +171,30 @@ class GameScene2: SKScene {
       }
       vMap.append(basic)
     }
+    let defaults = UserDefaults.standard
+    defaults.set(vMap, forKey:"virus")
     return vMap
   }
   
-  func loadVirus(map:[Int64]) {
+  func loadVirus() {
     // assuming rows = columns
-    if map.count == 0 {
-      return
-    }
+    let defaults = UserDefaults.standard
+    let map = defaults.object(forKey: "virus") as! Array<Int64>
     for r in 0..<tileMap.numberOfRows {
       var bitMask:Int64 = 1
       let basic:Int64 = map[r]
       for c in 0..<tileMap.numberOfColumns {
         if basic & bitMask != 0 {
-          tileMap.setTileGroup(redGroup, forColumn: c, row: r)
+          switch point.colour {
+            case "blue":
+              tileMap.setTileGroup(blueGroup, forColumn: c, row: r)
+            case "green":
+              tileMap.setTileGroup(greenGroup, forColumn: c, row: r)
+            case "orange":
+              tileMap.setTileGroup(orangeGroup, forColumn: c, row: r)
+            default:
+              tileMap.setTileGroup(redGroup, forColumn: c, row: r)
+          }
         }
         bitMask = bitMask << 1
       }

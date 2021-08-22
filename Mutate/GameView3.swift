@@ -44,11 +44,11 @@ class GameScene3: SKScene {
     let location = touch.location(in: self)
     let column = tileMap.tileColumnIndex(fromPosition: location)
     let row = tileMap.tileRowIndex(fromPosition: location)
-    common.placer?.position = tileMap.centerOfTile(atColumn: column, row: row)
-    cordValue = Cords(c: column - 8, r: row - 8)
-//    point.mark = false
-//    cameraNode.position = location
-//    camera = cameraNode
+    var place2put = tileMap.centerOfTile(atColumn: column, row: row)
+    place2put.y -= 4
+    place2put.x -= 4
+    common.placer?.position = place2put
+    cordValue = Cords(c: column, r: row)
   }
   
   override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -56,8 +56,12 @@ class GameScene3: SKScene {
     let location = touch.location(in: self)
     let column = tileMap.tileColumnIndex(fromPosition: location)
     let row = tileMap.tileRowIndex(fromPosition: location)
-    common.placer?.position = tileMap.centerOfTile(atColumn: column, row: row)
-    cordValue = Cords(c: column - 8, r: row - 8)
+    var place2put = tileMap.centerOfTile(atColumn: column, row: row)
+    place2put.y -= 4
+    place2put.x -= 4
+    common.placer?.position = place2put
+ 
+    cordValue = Cords(c: column, r: row)
     
   }
   
@@ -76,8 +80,8 @@ class GameScene3: SKScene {
         if !common.touched {
         for c in 0..<mapSize {
           for r in 0..<mapSize {
-            let nC = cordValue.c + c
-            let nR = cordValue.r + r
+            let nC = cordValue.c + c - 8
+            let nR = cordValue.r + r - 8
             if scene2.tileMap.tileGroup(atColumn: c, row: r)?.name == point.colour {
               switch point.colour {
                 case "blue":
@@ -111,6 +115,7 @@ class GameScene3: SKScene {
       common.placer = SKSpriteNode(texture: tex)
       common.placer?.position = tileMap.centerOfTile(atColumn: mapSize, row: mapSize)
       common.placer?.name = "mark"
+//      common.placer?.anchorPoint = CGPoint(x: 0, y: 0)
       addChild(common.placer!)
       
       let corner = SKSpriteNode(color: UIColor.red, size: CGSize(width: 4, height: 4))
@@ -176,16 +181,26 @@ class GameScene3: SKScene {
     tileMap.fill(with: blackGroup)
   }
   
-  func report() -> Int {
-    var count = 0
+  func report() -> [Int] {
+    // orange, blue, green, red
+    var counts = [0,0,0,0]
     for c in 0..<tileMap.numberOfColumns {
       for r in 0..<tileMap.numberOfRows {
-        if tileMap.tileGroup(atColumn: c, row: r)?.name == "red" {
-          count += 1
+        switch tileMap.tileGroup(atColumn: c, row: r)?.name {
+        case "orange":
+          counts[0] += 1
+        case "blue":
+          counts[1] += 1
+        case "green":
+          counts[2] += 1
+        case "red":
+          counts[3] += 1
+        default:
+          break
         }
       }
     }
-    return count
+    return counts
   }
   
   func returnBox() -> UIImage {
@@ -222,10 +237,10 @@ class GameScene3: SKScene {
 //  }
   
   func returnMark() -> UIImage {
-    let renderer = UIGraphicsImageRenderer(size: CGSize(width: mapSize, height: mapSize))
+    let renderer = UIGraphicsImageRenderer(size: CGSize(width: 128, height: 128))
     return renderer.image { (context) in
       context.cgContext.setStrokeColor(UIColor.yellow.cgColor)
-      context.stroke(CGRect(x: 0, y: 0, width: mapSize, height: mapSize))
+      context.stroke(CGRect(x: 0, y: 0, width: 128, height: 128))
     }
   }
   
@@ -256,9 +271,9 @@ class GameScene3: SKScene {
     
     var counts:[Players] = [Players(index: 0, name: "orange", score: 0),Players(index: 1, name: "blue", score: 0),Players(index: 2, name: "green",score:0),Players(index: 3, name: "red", score:0)]
     
+    
     repeat {
-      passes += 1
- 
+      
       
 //      for i in 0..<counts.count {
 //        counts[i].score = 0
@@ -271,89 +286,38 @@ class GameScene3: SKScene {
       let plusRow = cellRow + 1
       let minusRow = cellRow - 1
       
-//      if let dix = counts.first(where: { $0.name == tileMap.tileGroup(atColumn: minusCellColumn, row: cellRow)?.name }) {
-//        counts[dix.index].score += 1
-//      }
+
       if let dix = counts.firstIndex(where: { $0.name == tileMap.tileGroup(atColumn: minusCellColumn, row: cellRow)?.name }) {
         counts[dix].score += 1
       }
-//      if let dix = returnCounts(colour: (tileMap.tileGroup(atColumn: minusCellColumn, row: cellRow)?.name)) {
-//        counts[dix].score += 1
-//      }
-      
-      
-//      if let dix = counts.first(where: { $0.name == tileMap.tileGroup(atColumn: plusCellColumn, row: cellRow)?.name }) {
-//        counts[dix.index].score += 1
-//      }
+
       if let dix = counts.firstIndex(where: { $0.name == tileMap.tileGroup(atColumn: plusCellColumn, row: cellRow)?.name }) {
         counts[dix].score += 1
       }
-//      if let dix = returnCounts(colour: (tileMap.tileGroup(atColumn: plusCellColumn, row: cellRow)?.name)) {
-//        counts[dix].score += 1
-//      }
-      
-//      if let dix = counts.first(where: { $0.name == tileMap.tileGroup(atColumn: minusCellColumn, row: minusRow)?.name }) {
-//        counts[dix.index].score += 1
-//      }
+
       if let dix = counts.firstIndex(where: { $0.name == tileMap.tileGroup(atColumn: minusCellColumn, row: minusRow)?.name }) {
         counts[dix].score += 1
       }
-//      if let dix = returnCounts(colour: (tileMap.tileGroup(atColumn: minusCellColumn, row: minusRow)?.name)) {
-//        counts[dix].score += 1
-//      }
 
-//      if let dix = counts.first(where: { $0.name == tileMap.tileGroup(atColumn: cellColumn, row: minusRow)?.name }) {
-//        counts[dix.index].score += 1
-//      }
       if let dix = counts.firstIndex(where: { $0.name == tileMap.tileGroup(atColumn: cellColumn, row: minusRow)?.name }) {
         counts[dix].score += 1
       }
-//      if let dix = returnCounts(colour: (tileMap.tileGroup(atColumn: cellColumn, row: minusRow)?.name)) {
-//        counts[dix].score += 1
-//      }
-      
-//      if let dix = counts.first(where: { $0.name == tileMap.tileGroup(atColumn: plusCellColumn, row: minusRow)?.name }) {
-//        counts[dix.index].score += 1
-//      }
+
       if let dix = counts.firstIndex(where: { $0.name == tileMap.tileGroup(atColumn: plusCellColumn, row: minusRow)?.name }) {
         counts[dix].score += 1
       }
-//      if let dix = returnCounts(colour: (tileMap.tileGroup(atColumn: plusCellColumn, row: minusRow)?.name)) {
-//        counts[dix].score += 1
-//      }
-    
-//      if let dix = counts.first(where: { $0.name == tileMap.tileGroup(atColumn: minusCellColumn, row: plusRow)?.name }) {
-//        counts[dix.index].score += 1
-//      }
+
       if let dix = counts.firstIndex(where: { $0.name == tileMap.tileGroup(atColumn: minusCellColumn, row: plusRow)?.name }) {
         counts[dix].score += 1
       }
-//      if let dix = returnCounts(colour: (tileMap.tileGroup(atColumn: minusCellColumn, row: plusRow)?.name)) {
-//        counts[dix].score += 1
-//      }
-      
-//      if let dix = counts.first(where: { $0.name == tileMap.tileGroup(atColumn: cellColumn, row: plusRow)?.name }) {
-//        counts[dix.index].score += 1
-//      }
+
       if let dix = counts.firstIndex(where: { $0.name == tileMap.tileGroup(atColumn: cellColumn, row: plusRow)?.name }) {
         counts[dix].score += 1
       }
-//      if let dix = returnCounts(colour: (tileMap.tileGroup(atColumn: cellColumn, row: plusRow)?.name)) {
-//        counts[dix].score += 1
-//      }
-      
-//      if let dix = counts.first(where: { $0.name == tileMap.tileGroup(atColumn: plusCellColumn, row: plusRow)?.name }) {
-//        counts[dix.index].score += 1
-//      }
+
       if let dix = counts.firstIndex(where: { $0.name == tileMap.tileGroup(atColumn: plusCellColumn, row: plusRow)?.name }) {
         counts[dix].score += 1
       }
-//      if let dix = returnCounts(colour: (tileMap.tileGroup(atColumn: plusCellColumn, row: plusRow)?.name)) {
-//        counts[dix].score += 1
-//      }
-
-//      let sum = counts.lazy.compactMap { $0.score }
-//            .reduce(0, +)
             
       let sum = counts[0].score | counts[1].score | counts[2].score | counts[3].score
       
@@ -363,18 +327,7 @@ class GameScene3: SKScene {
         } else {
           if sum == 3 {
             let indexed = counts.max { $0.score < $1.score }?.index
-            print("indexed ",indexed)
-              
-          
-//              var largest = 0
-//              var indexed = 0
-//              for (index,value) in counts.enumerated() {
-//                if value.score > largest {
-//                  largest = value.score
-//                  indexed = index
-//                }
-//              }
-              alive.append(Matrix(c: cellColumn, r: cellRow, colour: indexed))
+            alive.append(Matrix(c: cellColumn, r: cellRow, colour: indexed))
           }
         }
       }
