@@ -44,6 +44,15 @@ class GameScene3: SKScene {
   
   override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
     guard let touch = touches.first else { return }
+    if common.placer != nil {
+        common.placer?.removeFromParent()
+    }
+    let tex = SKTexture(image: returnMark())
+    common.placer = SKSpriteNode(texture: tex)
+    common.placer?.position = tileMap.centerOfTile(atColumn: mapSize, row: mapSize)
+    common.placer?.name = "mark"
+    addChild(common.placer!)
+    
     let location = touch.location(in: self)
     let column = tileMap.tileColumnIndex(fromPosition: location)
     let row = tileMap.tileRowIndex(fromPosition: location)
@@ -83,8 +92,6 @@ class GameScene3: SKScene {
     }
   }
   
-  
-  
   override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
       if common.placer != nil {
         common.placer?.removeFromParent()
@@ -112,24 +119,16 @@ class GameScene3: SKScene {
         }
         common.touched = true
       }
-      
   }
   
   
   override func didMove(to view: SKView) {
-    
-    if common.placer == nil {
       
+    if common.placer == nil {
       if !common.gridDrawn {
         doGrid()
         common.gridDrawn = true
       }
-      let tex = SKTexture(image: returnMark())
-      common.placer = SKSpriteNode(texture: tex)
-      common.placer?.position = tileMap.centerOfTile(atColumn: mapSize, row: mapSize)
-      common.placer?.name = "mark"
-//      common.placer?.anchorPoint = CGPoint(x: 0, y: 0)
-      addChild(common.placer!)
       
       let corner = SKSpriteNode(color: UIColor.red, size: CGSize(width: 4, height: 4))
       corner.position = tileMap.centerOfTile(atColumn: 0, row: 0)

@@ -16,7 +16,7 @@ var resetScrollView = PassthroughSubject<Void,Never>()
 var pausePlay = PassthroughSubject<Void,Never>()
 
 let ButtonSize:CGFloat = 48
-let textSize:CGFloat = 16
+let textSize:CGFloat = 13
 
 var scene: SKScene {
   let scene = GameScene.shared
@@ -348,24 +348,38 @@ struct BottomOfGrid: View {
   let point = Pointy.shared
   let scene21 = GameScene2.shared
   var body: some View {
-    HStack {
+    VStack {
     Button {
         point.cameraLocation.y -= 16
         scene21.doCamera()
       } label: {
-        Image(systemName: "arrow.down.square.fill")
+        Text(" up ")
+        .font(Fonts.touchOfNature(size: textSize))
+        .foregroundColor(Color.white)
+        .overlay(Image(systemName: "rectangle.roundedtop")
           .resizable()
+          .foregroundColor(Color.white)
           .opacity(0.9)
-          .frame(width: 64, height: 64, alignment: .center)
+          .frame(width: 72, height: 32, alignment: .center))
+//        Image(systemName: "arrow.down.square.fill")
+//          .resizable()
+//          .opacity(0.9)
+//          .frame(width: 64, height: 64, alignment: .center)
       }
         
       Text("place")
         .font(Fonts.touchOfNature(size: textSize))
         .foregroundColor(Color.white)
+        .overlay(Image(systemName: "rectangle.roundedbottom")
+          .resizable()
+          .foregroundColor(Color.white)
+          .opacity(0.9)
+          .frame(width: 72, height: 32, alignment: .center))
         .onTapGesture {
           choice.send("run")
           point.cameraLocation = CGPoint(x: 256, y: 240)
         }
+        .padding()
       }
   }
 }
@@ -374,21 +388,37 @@ struct TopOfGrid: View {
   let point = Pointy.shared
   let scene21 = GameScene2.shared
   var body: some View {
-    HStack {
-    Text(" clear ")
-      .font(Fonts.touchOfNature(size: textSize))
-      .foregroundColor(Color.white)
+    VStack {
+      Text("clear")
+        .font(Fonts.touchOfNature(size: textSize))
+        .foregroundColor(Color.white)
+        .overlay(Image(systemName: "rectangle.roundedtop")
+          .resizable()
+          .foregroundColor(Color.white)
+          .opacity(0.9)
+          .frame(width: 72, height: 32, alignment: .center))
+//    Text(" clear ")
+//      .font(Fonts.touchOfNature(size: textSize))
+//      .foregroundColor(Color.white)
       .onTapGesture {
         scene21.clear()
-      }
+      }.padding()
        Button {
           point.cameraLocation.y += 16
           scene21.doCamera()
         } label: {
-          Image(systemName: "arrow.up.square.fill")
-            .resizable()
-            .opacity(0.9)
-            .frame(width: 64, height: 64, alignment: .center)
+        Text(" down ")
+        .font(Fonts.touchOfNature(size: textSize))
+        .foregroundColor(Color.white)
+        .overlay(Image(systemName: "rectangle.roundedbottom")
+          .resizable()
+          .foregroundColor(Color.white)
+          .opacity(0.9)
+          .frame(width: 72, height: 32, alignment: .center))
+//          Image(systemName: "arrow.up.square.fill")
+//            .resizable()
+//            .opacity(0.9)
+//            .frame(width: 64, height: 64, alignment: .center)
         }
     }
   }
@@ -403,15 +433,29 @@ struct LeftOfGrid: View {
         point.cameraLocation.x -= 16
         scene21.doCamera()
       } label: {
-        Image(systemName: "arrow.backward.square.fill")
+        Text("left")
+        .font(Fonts.touchOfNature(size: textSize - 1))
+        .foregroundColor(Color.white)
+        .overlay(Image(systemName: "rectangle.roundedtop")
           .resizable()
+          .foregroundColor(Color.white)
           .opacity(0.9)
-          .frame(width: 64, height: 64, alignment: .center)
-      }
+          .frame(width: 72, height: 32, alignment: .center))
+          
+//        Image(systemName: "arrow.backward.square.fill")
+//          .resizable()
+//          .opacity(0.9)
+//          .frame(width: 64, height: 64, alignment: .center)
+      }.padding()
       
-      Text(" load ")
+      Text("load")
         .font(Fonts.touchOfNature(size: textSize))
         .foregroundColor(Color.white)
+        .overlay(Image(systemName: "rectangle.roundedbottom")
+          .resizable()
+          .foregroundColor(Color.white)
+          .opacity(0.9)
+          .frame(width: 72, height: 32, alignment: .center))
         .onTapGesture {
           scene21.loadVirus()
         }
@@ -425,21 +469,34 @@ struct RightOfGrid: View {
   let scene21 = GameScene2.shared
   var body: some View {
     VStack {
-      Text(" save ")
+      Text("save")
         .font(Fonts.touchOfNature(size: textSize))
         .foregroundColor(Color.white)
+        .overlay(Image(systemName: "rectangle.roundedtop")
+          .resizable()
+          .foregroundColor(Color.white)
+          .opacity(0.9)
+          .frame(width: 72, height: 32, alignment: .center))
         .onTapGesture {
           vMap = scene21.saveVirus()
         }
-      
+        .padding()
       Button {
         point.cameraLocation.x += 16
         scene21.doCamera()
       } label: {
-        Image(systemName: "arrow.forward.square.fill")
+        Text("right")
+        .font(Fonts.touchOfNature(size: textSize - 1))
+        .foregroundColor(Color.white)
+        .overlay(Image(systemName: "rectangle.roundedbottom")
           .resizable()
-          .opacity(0.8)
-          .frame(width: 64, height: 64, alignment: .center)
+          .foregroundColor(Color.white)
+          .opacity(0.9)
+          .frame(width: 72, height: 32, alignment: .center))
+//        Image(systemName: "arrow.forward.square.fill")
+//          .resizable()
+//          .opacity(0.8)
+//          .frame(width: 64, height: 64, alignment: .center)
       }
     }
   }
