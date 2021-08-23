@@ -47,7 +47,6 @@ var scene3: SKScene {
 
 struct ContentView: View {
   
-  
   @State var vMap:[Int64] = []
   @State var menu:String!
   @State var ready = 0.0
@@ -70,12 +69,6 @@ struct ContentView: View {
     
     ZStack {
       Color.black
-        .onAppear {
-          for family in UIFont.familyNames.sorted() {
-            let names = UIFont.fontNames(forFamilyName: family)
-          print("Family: \(family) Font names: \(names)")
-          }
-        }
       switch menu {
       case "design":
         VStack {
@@ -95,16 +88,12 @@ struct ContentView: View {
           BottomOfGrid().zIndex(1)
         }
       case "run":
-        
         VStack(spacing: 10) {
           HighGrid(paused: $paused).zIndex(1)
-          
           SpriteView(scene: scene3)
             .ignoresSafeArea()
             .scaleEffect(zoomFactor)
-            
           LowGrid(zoomFactor: $zoomFactor, paused: $paused).zIndex(1)
-          
         }
       case "score":
         VStack(spacing: 4) {
@@ -160,7 +149,7 @@ struct ContentView: View {
            .font(Fonts.touchOfNature(size: textSize))
               .foregroundColor(Color.white)
             }
-            .padding()
+            .padding(Edge.Set.top, 24)
           Text(" re-run ")
              .font(Fonts.touchOfNature(size: textSize))
               .foregroundColor(Color.white)
@@ -170,7 +159,6 @@ struct ContentView: View {
             }.onAppear {
               report = scene31.report()
             }.padding(Edge.Set.top, 32)
-          
         }
       default:
         VStack {
@@ -182,16 +170,13 @@ struct ContentView: View {
             .opacity(fadeIn)
             .onAppear {
               withAnimation(.linear(duration: 12)) {
-                fadeIn = 0.8
+                fadeIn = 0.9
               }
             }
             .padding(Edge.Set.bottom, 0)
           SpriteView(scene: scene)
             .frame(width: 256, height: 320)
             .ignoresSafeArea()
-          
-          
-          
         }.onAppear {
           choose = choice
             .sink { value in
@@ -215,7 +200,6 @@ struct LowGrid: View {
   var body: some View {
     HStack(spacing: 16) {
       Button {
-        print("po ",point.cameraLocation)
         point.cameraLocation.y -= 16
         scene31.doCamera()
       } label: {
@@ -231,7 +215,6 @@ struct LowGrid: View {
         Text(" clear ")
         .font(Fonts.touchOfNature(size: textSize))
         .foregroundColor(Color.white)
-          
       }
       
       Button {
@@ -248,7 +231,6 @@ struct LowGrid: View {
         withAnimation(.linear(duration: 1)) {
           zoomFactor -= 0.5
         }
-        
       } label: {
         Image(systemName: "minus.magnifyingglass")
           .resizable()
@@ -262,12 +244,10 @@ struct LowGrid: View {
           Text(" play ")
         .font(Fonts.touchOfNature(size: textSize))
         .foregroundColor(Color.white)
-            
         } else {
           Text(" pause ")
         .font(Fonts.touchOfNature(size: textSize))
         .foregroundColor(Color.white)
-            
         }
         
       }.onReceive(timer) { _ in
@@ -282,7 +262,6 @@ struct LowGrid: View {
       }
       
       Button {
-        print("po ",point.cameraLocation)
         point.cameraLocation.x -= 16
         scene31.doCamera()
       } label: {
@@ -297,7 +276,6 @@ struct LowGrid: View {
 
 struct HighGrid: View {
   @Binding var paused: Bool
-  
   @ObservedObject var common = CommonVariables.shared
   let scene31 = GameScene3.shared
   let scene21 = GameScene2.shared
@@ -306,7 +284,6 @@ struct HighGrid: View {
   var body: some View {
     HStack {
       Button {
-        print("po ",point.cameraLocation)
         point.cameraLocation.y += 16
         scene31.doCamera()
       } label: {
@@ -323,14 +300,12 @@ struct HighGrid: View {
           common.running = false
           common.touched = false
           common.placer = nil
-          
           paused = true
           scene21.clear()
           scene31.common.placer?.removeFromParent()
         }
       
       Button {
-        print("po ",point.cameraLocation)
         point.cameraLocation.x += 16
         scene31.doCamera()
       } label: {
@@ -383,7 +358,7 @@ struct BottomOfGrid: View {
           .opacity(0.9)
           .frame(width: 64, height: 64, alignment: .center)
       }
-            
+        
       Text("place")
         .font(Fonts.touchOfNature(size: textSize))
         .foregroundColor(Color.white)
@@ -466,7 +441,6 @@ struct RightOfGrid: View {
           .opacity(0.8)
           .frame(width: 64, height: 64, alignment: .center)
       }
-      
     }
   }
 }
@@ -488,8 +462,6 @@ struct PreventableScrollView<Content>: View where Content: View {
     }
   }
 }
-
-
 
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
