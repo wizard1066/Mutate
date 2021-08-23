@@ -58,13 +58,19 @@ class GameScene: SKScene, touched {
     if let fireParticles = SKEmitterNode(fileNamed: "MyParticle") {
       fireParticles.position = CGPoint(x: 0, y: 0)
       crop.addChild(fireParticles)
-    }
+    
     
    
     
 //    let sp = SKSpriteNode(color: .red, size: CGSize(width: 256, height: 48))
 //    sp.position = CGPoint(x: 0, y: 0)
 //    crop.addChild(sp)
+    
+//    let sp3 = SKSpriteNode(color: .red, size: CGSize(width: 256, height: 48))
+//    sp3.position = CGPoint(x: 0, y: 0)
+//    crop2.addChild(sp3)
+    
+    
 
     let sp2 = SKNode()
     
@@ -74,14 +80,14 @@ class GameScene: SKScene, touched {
     addChild(sp2)
 
     addChild(crop)
-    addChild(crop2)
+//    addChild(crop2)
     
     let newImage = changeColor(inputImage2D: UIImage(named: "covid21")!, newColor: CIColor.red).imageByMakingWhiteBackgroundTransparent
     let tex2 = SKTexture(image: newImage()!)
     let redPlayer = TouchableSprite(texture: tex2)
     redPlayer.delegate = self
     redPlayer.colour = "red"
-    redPlayer.position = CGPoint(x: 60, y: 256)
+    redPlayer.position = CGPoint(x: 96-12, y: 224)
     redPlayer.alpha = 0
     redPlayer.zPosition = 1
     
@@ -90,7 +96,7 @@ class GameScene: SKScene, touched {
     let bluePlayer = TouchableSprite(texture: tex3, size: CGSize(width: 64, height: 64))
     bluePlayer.delegate = self
     bluePlayer.colour = "blue"
-    bluePlayer.position = CGPoint(x: 96, y: 224)
+    bluePlayer.position = CGPoint(x: 128-12, y: 256)
     bluePlayer.alpha = 0
     bluePlayer.zPosition = 1
     
@@ -99,7 +105,7 @@ class GameScene: SKScene, touched {
     let greenPlayer = TouchableSprite(texture: tex4, size: CGSize(width: 64, height: 64))
     greenPlayer.delegate = self
     greenPlayer.colour = "green"
-    greenPlayer.position = CGPoint(x: 96+64, y: 224)
+    greenPlayer.position = CGPoint(x: 160-12, y: 224)
     greenPlayer.alpha = 0
     greenPlayer.zPosition = 1
     
@@ -108,18 +114,28 @@ class GameScene: SKScene, touched {
     let orangePlayer = TouchableSprite(texture: tex5, size: CGSize(width: 64, height: 64))
     orangePlayer.delegate = self
     orangePlayer.colour = "orange"
-    orangePlayer.position = CGPoint(x: 64+128, y: 256)
+    orangePlayer.position = CGPoint(x: 192-12, y: 256)
     orangePlayer.alpha = 0
     orangePlayer.zPosition = 1
     
-     if let fireParticles2 = SKEmitterNode(fileNamed: "MyParticle") {
+    if let fireParticles2 = SKEmitterNode(fileNamed: "MyParticle") {
       fireParticles2.position = CGPoint(x: 0, y: 0)
-      crop2.addChild(fireParticles2)
+//      crop2.addChild(fireParticles2)
       
-    let ma = SKAction.move(by: CGVector(dx: 0, dy: 64), duration: 4)
+    if let fireParticles3 = SKEmitterNode(fileNamed: "MyParticle") {
+      fireParticles3.position = CGPoint(x: 0, y: 64)
+//      crop2.addChild(fireParticles3)
+    }
+//    let ma = SKAction.move(by: CGVector(dx: 0, dy: 64), duration: 4)
 //    let ra = SKAction.move(to: CGPoint(x: 0, y: 0), duration: 0)
-    let na = SKAction.move(by: CGVector(dx: 0, dy: -256), duration: 4)
-    let fi = SKAction.fadeAlpha(to: 0.7, duration: 2)
+//    let na = SKAction.move(by: CGVector(dx: 0, dy: -256), duration: 4)
+    let fi = SKAction.fadeAlpha(to: 0.7, duration: 12)
+    let fo = SKAction.fadeAlpha(to: 0.0, duration: 24)
+      let ke = SKAction.run {
+//        self.crop.removeFromParent()
+//        self.crop2.removeFromParent()
+//        fireParticles.removeFromParent()
+      }
     let co = SKAction.run {
         redPlayer.run(fi)
         bluePlayer.run(fi)
@@ -127,19 +143,19 @@ class GameScene: SKScene, touched {
         orangePlayer.run(fi)
     }
     let ca = SKAction.run { [self] in
-      crop2.removeFromParent()
+//      crop2.run(fo)
       addChild(redPlayer)
       addChild(bluePlayer)
       addChild(greenPlayer)
       addChild(orangePlayer)
     }
-      let se = SKAction.sequence([ma,na,ca,co])
+      let se = SKAction.sequence([ca,co,ke])
     
-      fireParticles2.run(se)
+      sp2.run(se)
     }
     
-    
-    
+      
+    }
     
   }
 }

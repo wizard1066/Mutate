@@ -24,11 +24,14 @@ class GameScene3: SKScene {
   }
   var cordValue:Cords!
   
+  var cameraNode = SKCameraNode()
+  
   static let shared = GameScene3()
   let scene2 = GameScene2.shared
   var point = Pointy.shared
   var common = CommonVariables.shared
   var cent:SKSpriteNode!
+  
   
   
   var tileMap:SKTileMapNode!
@@ -65,6 +68,11 @@ class GameScene3: SKScene {
     
   }
   
+  func doCamera() {
+    cameraNode.position = point.cameraLocation
+    camera = cameraNode
+  }
+  
   override func update(_ currentTime: TimeInterval) {
     if common.running {
       self.doRules()
@@ -75,7 +83,12 @@ class GameScene3: SKScene {
     }
   }
   
+  
+  
   override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+      if common.placer != nil {
+        common.placer?.removeFromParent()
+      }
       cent.removeFromParent()
         if !common.touched {
         for c in 0..<mapSize {
@@ -106,7 +119,7 @@ class GameScene3: SKScene {
   override func didMove(to view: SKView) {
     
     if common.placer == nil {
-      print("didMove")
+      
       if !common.gridDrawn {
         doGrid()
         common.gridDrawn = true
@@ -149,7 +162,7 @@ class GameScene3: SKScene {
     let greenTexture = SKTexture(image: green)
     let greenTile = SKTileDefinition(texture: greenTexture)
     
-    let orange = returnColour(mapSize: mapSize, colour: UIColor.orange)
+    let orange = returnColour(mapSize: mapSize, colour: UIColor.yellow)
     let orangeTexture = SKTexture(image: orange)
     let orangeTile = SKTileDefinition(texture: orangeTexture)
     
@@ -214,7 +227,7 @@ class GameScene3: SKScene {
   
   func returnColour(mapSize: Int, colour:UIColor) -> UIImage {
     let tileSize = 256 / mapSize
-    print("ts ",tileSize)
+    
     let renderer = UIGraphicsImageRenderer(size: CGSize(width: 8, height: 8))
     return renderer.image { (context) in
       context.cgContext.setStrokeColor(UIColor.white.cgColor)
@@ -224,17 +237,6 @@ class GameScene3: SKScene {
 
     }
   }
-  
-//  func returnRed() -> UIImage {
-//    let renderer = UIGraphicsImageRenderer(size: CGSize(width: 8, height: 8))
-//    return renderer.image { (context) in
-//      context.cgContext.setStrokeColor(UIColor.red.cgColor)
-//      context.cgContext.setFillColor(UIColor.white.cgColor)
-//      context.fill(CGRect(x: 0, y: 0, width: 8, height: 8))
-//      context.stroke(CGRect(x: 0, y: 0, width: 8, height: 8))
-//
-//    }
-//  }
   
   func returnMark() -> UIImage {
     let renderer = UIGraphicsImageRenderer(size: CGSize(width: 128, height: 128))
@@ -253,6 +255,8 @@ class GameScene3: SKScene {
   var alive:[Matrix] = []
   var dead:[Matrix] = []
   var passes = 0
+  var previousSameSame = 0
+  var strike = 0
   
   func doRules() {
     var sortie = false
@@ -261,7 +265,7 @@ class GameScene3: SKScene {
     
     alive.removeAll()
     dead.removeAll()
-    passes = 0
+    
     
     struct Players {
       var index: Int
@@ -271,6 +275,9 @@ class GameScene3: SKScene {
     
     var counts:[Players] = [Players(index: 0, name: "orange", score: 0),Players(index: 1, name: "blue", score: 0),Players(index: 2, name: "green",score:0),Players(index: 3, name: "red", score:0)]
     
+    var sameSame = 0
+    
+    passes += 1
     
     repeat {
       
@@ -341,7 +348,24 @@ class GameScene3: SKScene {
       if cellRow > tileMap.numberOfRows {
         sortie = true
       }
+      
+      sameSame += sum
+      
     } while !sortie
+    
+    if sameSame == previousSameSame {
+      strike += 1
+    }
+    
+    if strike > 8 {
+      pausePlay.send()
+      strike = 0
+      previousSameSame = 0
+    }
+    
+    
+    
+    previousSameSame = sameSame
     
     for cells in dead {
       tileMap.setTileGroup(blackGroup, forColumn: cells.c, row: cells.r)

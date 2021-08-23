@@ -20,6 +20,7 @@
 		7BBDB1B126CBD6C0002679C6 /* MyParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7BBDB1B026CBD6C0002679C6 /* MyParticle.sks */; };
 		7BBDB1B326CBFEFC002679C6 /* GameView3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBDB1B226CBFEFC002679C6 /* GameView3.swift */; };
 		7BBDB1B526CCF80A002679C6 /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBDB1B426CCF808002679C6 /* Fonts.swift */; };
+		7BD809FA26D3FFBB00EAC164 /* Toucon__.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7BD809F926D3FFBB00EAC164 /* Toucon__.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 		7BBDB1B026CBD6C0002679C6 /* MyParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MyParticle.sks; sourceTree = "<group>"; };
 		7BBDB1B226CBFEFC002679C6 /* GameView3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView3.swift; sourceTree = "<group>"; };
 		7BBDB1B426CCF808002679C6 /* Fonts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
+		7BD809F926D3FFBB00EAC164 /* Toucon__.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Toucon__.ttf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 				7BBDB1AE26CADCDE002679C6 /* GameView2.swift */,
 				7BBDB1B226CBFEFC002679C6 /* GameView3.swift */,
 				7BBDB1B426CCF808002679C6 /* Fonts.swift */,
+				7BD809F926D3FFBB00EAC164 /* Toucon__.ttf */,
 				7BBDB1B026CBD6C0002679C6 /* MyParticle.sks */,
 				7BBDB17E26CA8EF1002679C6 /* Assets.xcassets */,
 				7BBDB18326CA8EF1002679C6 /* LaunchScreen.storyboard */,
@@ -256,6 +259,7 @@
 			files = (
 				7BBDB18526CA8EF1002679C6 /* LaunchScreen.storyboard in Resources */,
 				7BBDB18226CA8EF1002679C6 /* Preview Assets.xcassets in Resources */,
+				7BD809FA26D3FFBB00EAC164 /* Toucon__.ttf in Resources */,
 				7BBDB17F26CA8EF1002679C6 /* Assets.xcassets in Resources */,
 				7BBDB1B126CBD6C0002679C6 /* MyParticle.sks in Resources */,
 			);

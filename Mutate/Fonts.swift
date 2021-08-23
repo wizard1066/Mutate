@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct Fonts {
+  static func touchOfNature (size: CGFloat) -> Font {
+    return Font.custom("TouchOfNature", size: size)
+  }
+  
   static func avenirNextCondensedBold (size: CGFloat) -> Font {
     return Font.custom("AvenirNextCondensed-Bold", size: size)
   }

@@ -91,8 +91,7 @@ class GameScene2: SKScene {
   }
   
   override func update(_ currentTime: TimeInterval) {
-//    cameraNode.position = point.cameraLocation
-//    camera = cameraNode
+
   }
   
   
@@ -127,7 +126,7 @@ class GameScene2: SKScene {
     let greenTexture = SKTexture(image: green)
     let greenTile = SKTileDefinition(texture: greenTexture)
     
-    let orange = returnColour(mapSize: mapSize, colour: UIColor.orange)
+    let orange = returnColour(mapSize: mapSize, colour: UIColor.yellow)
     let orangeTexture = SKTexture(image: orange)
     let orangeTile = SKTileDefinition(texture: orangeTexture)
     
@@ -179,10 +178,11 @@ class GameScene2: SKScene {
   func loadVirus() {
     // assuming rows = columns
     let defaults = UserDefaults.standard
-    let map = defaults.object(forKey: "virus") as! Array<Int64>
-    for r in 0..<tileMap.numberOfRows {
+    if let map = defaults.object(forKey: "virus") {
+      let newMap = map as! Array<Int64>
+      for r in 0..<tileMap.numberOfRows {
       var bitMask:Int64 = 1
-      let basic:Int64 = map[r]
+      let basic:Int64 = newMap[r]
       for c in 0..<tileMap.numberOfColumns {
         if basic & bitMask != 0 {
           switch point.colour {
@@ -199,6 +199,8 @@ class GameScene2: SKScene {
         bitMask = bitMask << 1
       }
     }
+    }
+    
   }
   
   

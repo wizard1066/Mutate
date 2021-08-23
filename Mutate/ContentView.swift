@@ -13,6 +13,10 @@ var choose:AnyCancellable!
 var choice = PassthroughSubject<String,Never>()
 var turnOnScrolling = PassthroughSubject<Void,Never>()
 var resetScrollView = PassthroughSubject<Void,Never>()
+var pausePlay = PassthroughSubject<Void,Never>()
+
+let ButtonSize:CGFloat = 48
+let textSize:CGFloat = 16
 
 var scene: SKScene {
   let scene = GameScene.shared
@@ -42,7 +46,7 @@ var scene3: SKScene {
 }
 
 struct ContentView: View {
-  let timer = Timer.publish(every: 0.2, on: .main, in: .common).autoconnect()
+  
   
   @State var vMap:[Int64] = []
   @State var menu:String!
@@ -60,224 +64,121 @@ struct ContentView: View {
   @ObservedObject var common = CommonVariables.shared
   let scene31 = GameScene3.shared
   let scene21 = GameScene2.shared
+  let ButtonSize:CGFloat = 48
+  
   var body: some View {
+    
     ZStack {
       Color.black
+        .onAppear {
+          for family in UIFont.familyNames.sorted() {
+            let names = UIFont.fontNames(forFamilyName: family)
+          print("Family: \(family) Font names: \(names)")
+          }
+        }
       switch menu {
       case "design":
         VStack {
-          HStack {
-            Text(" clear ")
-              .font(Fonts.avenirNextCondensedMedium(size: 24))
-              .background(Color.white)
-              .onTapGesture {
-                scene21.clear()
-              }
-          }
-          VStack {
-            
-            Button {
-              point.cameraLocation.y += 16
-              scene21.doCamera()
-            } label: {
-              Image(systemName: "arrow.up.square.fill")
-                .resizable()
-                .opacity(0.9)
-                .frame(width: 64, height: 64, alignment: .center)
-            }
-            .zIndex(1)
-            
-            
+          TopOfGrid().zIndex(1)
             HStack {
-              LeftOfGrid()
-                .zIndex(1)
-              
+              LeftOfGrid().zIndex(1)
+              ZStack {
               SpriteView(scene: scene2)
                 .frame(width: 256, height: 256, alignment: .center)
                 .ignoresSafeArea()
                 .scaleEffect(zoomFactor)
-              
-              RightOfGrid(vMap: $vMap)
-            }
-            
-            Button {
-              point.cameraLocation.y -= 16
-              scene21.doCamera()
-            } label: {
-              Image(systemName: "arrow.down.square.fill")
-                .resizable()
-                .opacity(0.9)
-                .frame(width: 64, height: 64, alignment: .center)
-            }
-            .zIndex(1)
-            
-          } // VStack
-          Text("place")
-            .font(Fonts.avenirNextCondensedMedium(size: 24))
-            .background(Color.white)
-            .onTapGesture {
-              choice.send("run")
-            }
-          VStack {
-            
-            VStack {
-              HStack {
-                Button {
-                  zoomFactor += 0.5
-                  
-                } label: {
-                  Image(systemName: "plus.magnifyingglass")
-                    .resizable()
-                    .frame(width: 64, height: 64, alignment: .center)
-                }
-                
-                
-                Button {
-                  zoomFactor -= 0.5
-                  
-                } label: {
-                  Image(systemName: "minus.magnifyingglass")
-                    .resizable()
-                    .frame(width: 64, height: 64, alignment: .center)
-                }
+                MagnifyGrid(zoomFactor: $zoomFactor).zIndex(1)
+                  .offset(x: 0, y: 256)
               }
-              
-              
-              
+              RightOfGrid(vMap: $vMap).zIndex(1)
             }
-          }
+          BottomOfGrid().zIndex(1)
         }
       case "run":
         
         VStack(spacing: 10) {
-          HStack {
-            Text(" exit ")
-              .font(Fonts.avenirNextCondensedMedium(size: 24))
-              .background(Color.white)
-              .onTapGesture {
-                choice.send("score")
-                common.running = false
-                common.touched = false
-                common.placer = nil
-                canScroll = false
-                paused = true
-                scene21.clear()
-                print("counts ",scene31.alive.count,scene31.dead.count)
-              }
-          }
+          HighGrid(paused: $paused).zIndex(1)
+          
           SpriteView(scene: scene3)
             .ignoresSafeArea()
             .scaleEffect(zoomFactor)
             
-            .fixedSize(horizontal: false, vertical: false)
-          HStack {
-            
-            Button {
-              scene31.clear()
-            } label: {
-              Image(systemName: "xmark.circle")
-                .resizable()
-                .frame(width: 30, height: 30, alignment: .center)
-                .padding(Edge.Set.trailing, 12)
-                .padding(Edge.Set.bottom, 10)
-            }
-            
-            Button {
-              zoomFactor += 0.5
-            } label: {
-              Image(systemName: "plus.magnifyingglass")
-                .resizable()
-                .frame(width: 64, height: 64, alignment: .center)
-            }
-            Button {
-              zoomFactor -= 0.5
-            } label: {
-              Image(systemName: "minus.magnifyingglass")
-                .resizable()
-                .frame(width: 64, height: 64, alignment: .center)
-            }
-            Button {
-              paused.toggle()
-            } label: {
-              if paused {
-                Image(systemName: "play")
-                  .resizable()
-                  .frame(width: 24, height: 24, alignment: .center)
-                  .padding(Edge.Set.bottom, 8)
-              } else {
-                Image(systemName: "pause")
-                  .resizable()
-                  .frame(width: 24, height: 24, alignment: .center)
-                  .padding(Edge.Set.bottom, 8)
-              }
-              
-            }.onReceive(timer) { _ in
-              if !paused {
-                common.running = true
-                print("pass")
-              }
-            }
-          }
+          LowGrid(zoomFactor: $zoomFactor, paused: $paused).zIndex(1)
           
         }
       case "score":
         VStack(spacing: 4) {
           HStack {
-            Text(" Orange Cells ")
-              .font(Fonts.avenirNextCondensedMedium(size: 16))
-              .foregroundColor(Color.white)
+            Text(" yellow cells ")
+              .font(Fonts.touchOfNature(size: textSize))
+              .foregroundColor(Color.yellow)
             Image("covid21")
               .resizable()
               .frame(width: 64, height: 64, alignment: .center)
             Text("\(report[0])")
-              .font(Fonts.avenirNextCondensedMedium(size: 24))
+             .font(Fonts.touchOfNature(size: textSize))
               .foregroundColor(Color.white)
           }
           HStack {
-            Text(" BlueCells Cells ")
-              .font(Fonts.avenirNextCondensedMedium(size: 16))
-              .foregroundColor(Color.white)
+            Text(" blueCells cells ")
+              .font(Fonts.touchOfNature(size: textSize))
+              .foregroundColor(Color.blue)
             Image("covid21")
               .resizable()
               .frame(width: 64, height: 64, alignment: .center)
             Text("\(report[1])")
-              .font(Fonts.avenirNextCondensedMedium(size: 24))
+              .font(Fonts.touchOfNature(size: textSize))
               .foregroundColor(Color.white)
           }
           HStack {
-            Text(" Green Cells ")
-              .font(Fonts.avenirNextCondensedMedium(size: 16))
-              .foregroundColor(Color.white)
+            Text(" green cells ")
+             .font(Fonts.touchOfNature(size: textSize))
+              .foregroundColor(Color.green)
             Image("covid21")
               .resizable()
               .frame(width: 64, height: 64, alignment: .center)
             Text("\(report[2])")
-              .font(Fonts.avenirNextCondensedMedium(size: 24))
+              .font(Fonts.touchOfNature(size: textSize))
               .foregroundColor(Color.white)
           }
           HStack {
-            Text(" Red Cells ")
-              .font(Fonts.avenirNextCondensedMedium(size: 16))
-              .foregroundColor(Color.white)
+            Text(" red cells ")
+             .font(Fonts.touchOfNature(size: textSize))
+              .foregroundColor(Color.red)
             Image("covid21")
               .resizable()
               .frame(width: 64, height: 64, alignment: .center)
             Text("\(report[3])")
-              .font(Fonts.avenirNextCondensedMedium(size: 24))
+             .font(Fonts.touchOfNature(size: textSize))
               .foregroundColor(Color.white)
           }
-          Image("128x64b")
+          HStack {
+            Text("generations")
+            .font(Fonts.touchOfNature(size: textSize))
+              .foregroundColor(Color.white)
+            Text(String(scene31.passes))
+           .font(Fonts.touchOfNature(size: textSize))
+              .foregroundColor(Color.white)
+            }
+            .padding()
+          Text(" re-run ")
+             .font(Fonts.touchOfNature(size: textSize))
+              .foregroundColor(Color.white)
             .onTapGesture {
+              scene31.passes = 0
               choice.send("title")
             }.onAppear {
               report = scene31.report()
             }.padding(Edge.Set.top, 32)
+          
         }
       default:
         VStack {
           Color.black
             .frame(width: 1, height: 1, alignment: .center)
-          Image("128x64")
+          Text(" select player ")
+            .font(Fonts.touchOfNature(size: textSize))
+            .foregroundColor(Color.white)
             .opacity(fadeIn)
             .onAppear {
               withAnimation(.linear(duration: 12)) {
@@ -302,6 +203,222 @@ struct ContentView: View {
   }
 }
 
+struct LowGrid: View {
+  let timer = Timer.publish(every: 0.2, on: .main, in: .common).autoconnect()
+  
+  @Binding var zoomFactor: CGFloat
+  @Binding var paused: Bool
+  let point = Pointy.shared
+  let scene31 = GameScene3.shared
+  @ObservedObject var common = CommonVariables.shared
+  
+  var body: some View {
+    HStack(spacing: 16) {
+      Button {
+        print("po ",point.cameraLocation)
+        point.cameraLocation.y -= 16
+        scene31.doCamera()
+      } label: {
+        Image(systemName: "arrow.down.square.fill")
+          .resizable()
+          .opacity(0.9)
+          .frame(width: ButtonSize, height: ButtonSize, alignment: .center)
+      }
+      
+      Button {
+        scene31.clear()
+      } label: {
+        Text(" clear ")
+        .font(Fonts.touchOfNature(size: textSize))
+        .foregroundColor(Color.white)
+          
+      }
+      
+      Button {
+        withAnimation(.linear(duration: 2)) {
+          zoomFactor += 0.5
+        }
+      } label: {
+        Image(systemName: "plus.magnifyingglass")
+          .resizable()
+          .frame(width: ButtonSize, height: ButtonSize, alignment: .center)
+      }
+      
+      Button {
+        withAnimation(.linear(duration: 1)) {
+          zoomFactor -= 0.5
+        }
+        
+      } label: {
+        Image(systemName: "minus.magnifyingglass")
+          .resizable()
+          .frame(width: ButtonSize, height: ButtonSize, alignment: .center)
+      }
+      
+      Button {
+        paused.toggle()
+      } label: {
+        if paused {
+          Text(" play ")
+        .font(Fonts.touchOfNature(size: textSize))
+        .foregroundColor(Color.white)
+            
+        } else {
+          Text(" pause ")
+        .font(Fonts.touchOfNature(size: textSize))
+        .foregroundColor(Color.white)
+            
+        }
+        
+      }.onReceive(timer) { _ in
+        if !paused {
+          common.running = true
+        }
+      }.onReceive(pausePlay) { _ in
+        paused.toggle()
+        withAnimation(.linear(duration: 1)) {
+          zoomFactor = 1.0
+        }
+      }
+      
+      Button {
+        print("po ",point.cameraLocation)
+        point.cameraLocation.x -= 16
+        scene31.doCamera()
+      } label: {
+        Image(systemName: "arrow.backward.square.fill")
+          .resizable()
+          .opacity(0.9)
+          .frame(width: ButtonSize, height: ButtonSize, alignment: .center)
+      }
+    }
+  }
+}
+
+struct HighGrid: View {
+  @Binding var paused: Bool
+  
+  @ObservedObject var common = CommonVariables.shared
+  let scene31 = GameScene3.shared
+  let scene21 = GameScene2.shared
+  let point = Pointy.shared
+  
+  var body: some View {
+    HStack {
+      Button {
+        print("po ",point.cameraLocation)
+        point.cameraLocation.y += 16
+        scene31.doCamera()
+      } label: {
+        Image(systemName: "arrow.up.square.fill")
+          .resizable()
+          .opacity(0.9)
+          .frame(width: ButtonSize, height: ButtonSize, alignment: .center)
+      }
+      Text(" exit ")
+        .font(Fonts.touchOfNature(size: textSize))
+        .foregroundColor(Color.white)
+        .onTapGesture {
+          choice.send("score")
+          common.running = false
+          common.touched = false
+          common.placer = nil
+          
+          paused = true
+          scene21.clear()
+          scene31.common.placer?.removeFromParent()
+        }
+      
+      Button {
+        print("po ",point.cameraLocation)
+        point.cameraLocation.x += 16
+        scene31.doCamera()
+      } label: {
+        Image(systemName: "arrow.forward.square.fill")
+          .resizable()
+          .opacity(0.8)
+          .frame(width: ButtonSize, height: ButtonSize, alignment: .center)
+      }
+    }
+  }
+}
+
+struct MagnifyGrid: View {
+  @Binding var zoomFactor: CGFloat
+  var body: some View {
+    HStack {
+      Button {
+        withAnimation(.linear(duration: 1)) {
+          zoomFactor += 0.5
+        }
+      } label: {
+        Image(systemName: "plus.magnifyingglass")
+          .resizable()
+          .frame(width: ButtonSize, height: ButtonSize, alignment: .center)
+      }
+      Button {
+        withAnimation(.linear(duration: 1)) {
+          zoomFactor -= 0.5
+        }
+      } label: {
+        Image(systemName: "minus.magnifyingglass")
+          .resizable()
+          .frame(width: ButtonSize, height: ButtonSize, alignment: .center)
+      }
+    }
+  }
+}
+
+struct BottomOfGrid: View {
+  let point = Pointy.shared
+  let scene21 = GameScene2.shared
+  var body: some View {
+    HStack {
+    Button {
+        point.cameraLocation.y -= 16
+        scene21.doCamera()
+      } label: {
+        Image(systemName: "arrow.down.square.fill")
+          .resizable()
+          .opacity(0.9)
+          .frame(width: 64, height: 64, alignment: .center)
+      }
+            
+      Text("place")
+        .font(Fonts.touchOfNature(size: textSize))
+        .foregroundColor(Color.white)
+        .onTapGesture {
+          choice.send("run")
+          point.cameraLocation = CGPoint(x: 256, y: 240)
+        }
+      }
+  }
+}
+
+struct TopOfGrid: View {
+  let point = Pointy.shared
+  let scene21 = GameScene2.shared
+  var body: some View {
+    HStack {
+    Text(" clear ")
+      .font(Fonts.touchOfNature(size: textSize))
+      .foregroundColor(Color.white)
+      .onTapGesture {
+        scene21.clear()
+      }
+       Button {
+          point.cameraLocation.y += 16
+          scene21.doCamera()
+        } label: {
+          Image(systemName: "arrow.up.square.fill")
+            .resizable()
+            .opacity(0.9)
+            .frame(width: 64, height: 64, alignment: .center)
+        }
+    }
+  }
+}
+
 struct LeftOfGrid: View {
   let point = Pointy.shared
   let scene21 = GameScene2.shared
@@ -316,10 +433,10 @@ struct LeftOfGrid: View {
           .opacity(0.9)
           .frame(width: 64, height: 64, alignment: .center)
       }
-      .zIndex(1)
+      
       Text(" load ")
-        .font(Fonts.avenirNextCondensedMedium(size: 24))
-        .background(Color.white)
+        .font(Fonts.touchOfNature(size: textSize))
+        .foregroundColor(Color.white)
         .onTapGesture {
           scene21.loadVirus()
         }
@@ -334,8 +451,8 @@ struct RightOfGrid: View {
   var body: some View {
     VStack {
       Text(" save ")
-        .font(Fonts.avenirNextCondensedMedium(size: 24))
-        .background(Color.white)
+        .font(Fonts.touchOfNature(size: textSize))
+        .foregroundColor(Color.white)
         .onTapGesture {
           vMap = scene21.saveVirus()
         }
@@ -349,7 +466,7 @@ struct RightOfGrid: View {
           .opacity(0.8)
           .frame(width: 64, height: 64, alignment: .center)
       }
-      .zIndex(1)
+      
     }
   }
 }
