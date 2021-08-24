@@ -63,7 +63,7 @@ struct ContentView: View {
   @ObservedObject var common = CommonVariables.shared
   let scene31 = GameScene3.shared
   let scene21 = GameScene2.shared
-  let ButtonSize:CGFloat = 48
+  let ButtonSize:CGFloat = 32
   
   var body: some View {
     
@@ -88,8 +88,10 @@ struct ContentView: View {
           BottomOfGrid().zIndex(1)
         }
       case "run":
-        VStack(spacing: 10) {
-          HighGrid(paused: $paused).zIndex(1)
+        VStack(spacing: 24) {
+          HighGrid(paused: $paused)
+            .zIndex(1)
+            .offset(x: 0, y: /*@START_MENU_TOKEN@*/10.0/*@END_MENU_TOKEN@*/)
           SpriteView(scene: scene3)
             .ignoresSafeArea()
             .scaleEffect(zoomFactor)
@@ -198,56 +200,64 @@ struct LowGrid: View {
   @ObservedObject var common = CommonVariables.shared
   
   var body: some View {
-    HStack(spacing: 16) {
+    HStack(alignment: .center, spacing: 24) {
       Button {
         point.cameraLocation.y -= 16
         scene31.doCamera()
       } label: {
-        Image(systemName: "arrow.down.square.fill")
-          .resizable()
-          .opacity(0.9)
-          .frame(width: ButtonSize, height: ButtonSize, alignment: .center)
-      }
-      
-      Button {
-        scene31.clear()
-      } label: {
-        Text(" clear ")
+        Text("down")
         .font(Fonts.touchOfNature(size: textSize))
         .foregroundColor(Color.white)
-      }
-      
-      Button {
-        withAnimation(.linear(duration: 2)) {
-          zoomFactor += 0.5
-        }
-      } label: {
-        Image(systemName: "plus.magnifyingglass")
+        .overlay(Image(systemName: "rectangle.roundedbottom")
           .resizable()
-          .frame(width: ButtonSize, height: ButtonSize, alignment: .center)
+          .foregroundColor(Color.white)
+          .opacity(0.9)
+          .frame(width: 64, height: 32, alignment: .center))
       }
       
-      Button {
-        withAnimation(.linear(duration: 1)) {
-          zoomFactor -= 0.5
+      
+      HStack(spacing: 0) {
+        Button {
+          withAnimation(.linear(duration: 2)) {
+            zoomFactor += 0.5
+          }
+        } label: {
+          Image(systemName: "plus.magnifyingglass")
+            .resizable()
+            .frame(width: ButtonSize, height: ButtonSize, alignment: .center)
         }
-      } label: {
-        Image(systemName: "minus.magnifyingglass")
-          .resizable()
-          .frame(width: ButtonSize, height: ButtonSize, alignment: .center)
+        
+        Button {
+          withAnimation(.linear(duration: 1)) {
+            zoomFactor -= 0.5
+          }
+        } label: {
+          Image(systemName: "minus.magnifyingglass")
+            .resizable()
+            .frame(width: ButtonSize, height: ButtonSize, alignment: .center)
+        }
       }
-      
       Button {
         paused.toggle()
       } label: {
         if paused {
-          Text(" play ")
+          Text("play")
         .font(Fonts.touchOfNature(size: textSize))
         .foregroundColor(Color.white)
+        .overlay(Image(systemName: "rectangle.roundedbottom")
+          .resizable()
+          .foregroundColor(Color.white)
+          .opacity(0.9)
+          .frame(width: 64, height: 32, alignment: .center))
         } else {
-          Text(" pause ")
-        .font(Fonts.touchOfNature(size: textSize))
-        .foregroundColor(Color.white)
+          Text("pause")
+            .font(Fonts.touchOfNature(size: textSize))
+            .foregroundColor(Color.white)
+            .overlay(Image(systemName: "rectangle.roundedbottom")
+          .resizable()
+          .foregroundColor(Color.white)
+          .opacity(0.9)
+          .frame(width: 64, height: 32, alignment: .center))
         }
         
       }.onReceive(timer) { _ in
@@ -265,10 +275,14 @@ struct LowGrid: View {
         point.cameraLocation.x -= 16
         scene31.doCamera()
       } label: {
-        Image(systemName: "arrow.backward.square.fill")
+      Text("right")
+        .font(Fonts.touchOfNature(size: textSize))
+        .foregroundColor(Color.white)
+        .overlay(Image(systemName: "rectangle.roundedbottom")
           .resizable()
+          .foregroundColor(Color.white)
           .opacity(0.9)
-          .frame(width: ButtonSize, height: ButtonSize, alignment: .center)
+          .frame(width: 64, height: 32, alignment: .center))
       }
     }
   }
@@ -282,19 +296,42 @@ struct HighGrid: View {
   let point = Pointy.shared
   
   var body: some View {
-    HStack {
+    HStack(spacing: 42) {
       Button {
         point.cameraLocation.y += 16
         scene31.doCamera()
       } label: {
-        Image(systemName: "arrow.up.square.fill")
-          .resizable()
-          .opacity(0.9)
-          .frame(width: ButtonSize, height: ButtonSize, alignment: .center)
-      }
-      Text(" exit ")
+        Text("up")
         .font(Fonts.touchOfNature(size: textSize))
         .foregroundColor(Color.white)
+        .overlay(Image(systemName: "rectangle.roundedtop")
+          .resizable()
+          .foregroundColor(Color.white)
+          .opacity(0.9)
+          .frame(width: 72, height: 32, alignment: .center))
+      }
+      
+      Button {
+        scene31.clear()
+      } label: {
+        Text("clear")
+        .font(Fonts.touchOfNature(size: textSize))
+        .foregroundColor(Color.white)
+        .overlay(Image(systemName: "rectangle.roundedtop")
+          .resizable()
+          .foregroundColor(Color.white)
+          .opacity(0.9)
+          .frame(width: 64, height: 32, alignment: .center))
+      }.padding(Edge.Set.trailing, 10)
+      
+      Text("exit")
+        .font(Fonts.touchOfNature(size: textSize))
+        .foregroundColor(Color.white)
+        .overlay(Image(systemName: "rectangle.roundedtop")
+          .resizable()
+          .foregroundColor(Color.white)
+          .opacity(0.9)
+          .frame(width: 72, height: 32, alignment: .center))
         .onTapGesture {
           choice.send("score")
           common.running = false
@@ -309,10 +346,14 @@ struct HighGrid: View {
         point.cameraLocation.x += 16
         scene31.doCamera()
       } label: {
-        Image(systemName: "arrow.forward.square.fill")
+        Text("left")
+        .font(Fonts.touchOfNature(size: textSize))
+        .foregroundColor(Color.white)
+        .overlay(Image(systemName: "rectangle.roundedtop")
           .resizable()
-          .opacity(0.8)
-          .frame(width: ButtonSize, height: ButtonSize, alignment: .center)
+          .foregroundColor(Color.white)
+          .opacity(0.9)
+          .frame(width: 72, height: 32, alignment: .center))
       }
     }
   }
@@ -348,7 +389,7 @@ struct BottomOfGrid: View {
   let point = Pointy.shared
   let scene21 = GameScene2.shared
   var body: some View {
-    VStack {
+    HStack(spacing: 24) {
     Button {
         point.cameraLocation.y -= 16
         scene21.doCamera()
@@ -356,15 +397,11 @@ struct BottomOfGrid: View {
         Text(" up ")
         .font(Fonts.touchOfNature(size: textSize))
         .foregroundColor(Color.white)
-        .overlay(Image(systemName: "rectangle.roundedtop")
+        .overlay(Image(systemName: "rectangle.roundedbottom")
           .resizable()
           .foregroundColor(Color.white)
           .opacity(0.9)
           .frame(width: 72, height: 32, alignment: .center))
-//        Image(systemName: "arrow.down.square.fill")
-//          .resizable()
-//          .opacity(0.9)
-//          .frame(width: 64, height: 64, alignment: .center)
       }
         
       Text("place")
@@ -388,7 +425,7 @@ struct TopOfGrid: View {
   let point = Pointy.shared
   let scene21 = GameScene2.shared
   var body: some View {
-    VStack {
+    HStack(spacing: 10) {
       Text("clear")
         .font(Fonts.touchOfNature(size: textSize))
         .foregroundColor(Color.white)
@@ -397,12 +434,10 @@ struct TopOfGrid: View {
           .foregroundColor(Color.white)
           .opacity(0.9)
           .frame(width: 72, height: 32, alignment: .center))
-//    Text(" clear ")
-//      .font(Fonts.touchOfNature(size: textSize))
-//      .foregroundColor(Color.white)
       .onTapGesture {
         scene21.clear()
-      }.padding()
+      }
+      .padding()
        Button {
           point.cameraLocation.y += 16
           scene21.doCamera()
@@ -410,15 +445,11 @@ struct TopOfGrid: View {
         Text(" down ")
         .font(Fonts.touchOfNature(size: textSize))
         .foregroundColor(Color.white)
-        .overlay(Image(systemName: "rectangle.roundedbottom")
+        .overlay(Image(systemName: "rectangle.roundedtop")
           .resizable()
           .foregroundColor(Color.white)
           .opacity(0.9)
           .frame(width: 72, height: 32, alignment: .center))
-//          Image(systemName: "arrow.up.square.fill")
-//            .resizable()
-//            .opacity(0.9)
-//            .frame(width: 64, height: 64, alignment: .center)
         }
     }
   }
@@ -428,25 +459,21 @@ struct LeftOfGrid: View {
   let point = Pointy.shared
   let scene21 = GameScene2.shared
   var body: some View {
-    VStack {
+    VStack(spacing: 64) {
       Button {
         point.cameraLocation.x -= 16
         scene21.doCamera()
       } label: {
         Text("left")
-        .font(Fonts.touchOfNature(size: textSize - 1))
+        .font(Fonts.touchOfNature(size: textSize))
         .foregroundColor(Color.white)
-        .overlay(Image(systemName: "rectangle.roundedtop")
+        .overlay(Image(systemName: "rectangle.roundedbottom")
           .resizable()
           .foregroundColor(Color.white)
           .opacity(0.9)
           .frame(width: 72, height: 32, alignment: .center))
-          
-//        Image(systemName: "arrow.backward.square.fill")
-//          .resizable()
-//          .opacity(0.9)
-//          .frame(width: 64, height: 64, alignment: .center)
-      }.padding()
+      }
+      .rotationEffect(.degrees(90))
       
       Text("load")
         .font(Fonts.touchOfNature(size: textSize))
@@ -459,6 +486,7 @@ struct LeftOfGrid: View {
         .onTapGesture {
           scene21.loadVirus()
         }
+        .rotationEffect(.degrees(90))
     }
   }
 }
@@ -468,7 +496,7 @@ struct RightOfGrid: View {
   let point = Pointy.shared
   let scene21 = GameScene2.shared
   var body: some View {
-    VStack {
+    VStack(spacing: 64) {
       Text("save")
         .font(Fonts.touchOfNature(size: textSize))
         .foregroundColor(Color.white)
@@ -480,7 +508,7 @@ struct RightOfGrid: View {
         .onTapGesture {
           vMap = scene21.saveVirus()
         }
-        .padding()
+        .rotationEffect(.degrees(90))
       Button {
         point.cameraLocation.x += 16
         scene21.doCamera()
@@ -488,15 +516,13 @@ struct RightOfGrid: View {
         Text("right")
         .font(Fonts.touchOfNature(size: textSize - 1))
         .foregroundColor(Color.white)
-        .overlay(Image(systemName: "rectangle.roundedbottom")
+        .overlay(Image(systemName: "rectangle.roundedtop")
           .resizable()
           .foregroundColor(Color.white)
           .opacity(0.9)
           .frame(width: 72, height: 32, alignment: .center))
-//        Image(systemName: "arrow.forward.square.fill")
-//          .resizable()
-//          .opacity(0.8)
-//          .frame(width: 64, height: 64, alignment: .center)
+          .rotationEffect(.degrees(90))
+
       }
     }
   }
