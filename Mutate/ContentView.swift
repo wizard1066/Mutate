@@ -8,6 +8,7 @@
 import SwiftUI
 import SpriteKit
 import Combine
+import GameKit
 
 var choose:AnyCancellable!
 var choice = PassthroughSubject<String,Never>()
@@ -48,7 +49,7 @@ var scene3: SKScene {
 struct ContentView: View {
   
   @State var vMap:[Int64] = []
-  @State var menu:String!
+  @State var menu:String = "game"
   @State var ready = 0.0
   @State var canScroll = false
   @State var zoomFactor:CGFloat = 1
@@ -70,6 +71,8 @@ struct ContentView: View {
     ZStack {
       Color.black
       switch menu {
+      case "game":
+        MatchMaker()
       case "design":
         VStack {
           TopOfGrid().zIndex(1)
@@ -187,6 +190,19 @@ struct ContentView: View {
         }
       }
     }
+  }
+}
+
+struct MatchMaker: View {
+  var body: some View {
+    Text("matchmaker")
+      .font(Fonts.touchOfNature(size: textSize))
+      .foregroundColor(Color.white)
+//      .onAppear {
+//        let newGame = GameViewController()
+//        newGame.authenticatePlayer()
+//      }
+    GameView()
   }
 }
 

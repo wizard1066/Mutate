@@ -21,6 +21,8 @@
 		7BBDB1B326CBFEFC002679C6 /* GameView3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBDB1B226CBFEFC002679C6 /* GameView3.swift */; };
 		7BBDB1B526CCF80A002679C6 /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBDB1B426CCF808002679C6 /* Fonts.swift */; };
 		7BD809FA26D3FFBB00EAC164 /* Toucon__.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7BD809F926D3FFBB00EAC164 /* Toucon__.ttf */; };
+		7BD809FF26D4EEA500EAC164 /* Games.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD809FE26D4EEA500EAC164 /* Games.swift */; };
+		7BD80A0026D4FC9D00EAC164 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BD809FC26D4EC1700EAC164 /* GameKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +63,8 @@
 		7BBDB1B226CBFEFC002679C6 /* GameView3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView3.swift; sourceTree = "<group>"; };
 		7BBDB1B426CCF808002679C6 /* Fonts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
 		7BD809F926D3FFBB00EAC164 /* Toucon__.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Toucon__.ttf; sourceTree = "<group>"; };
+		7BD809FC26D4EC1700EAC164 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		7BD809FE26D4EEA500EAC164 /* Games.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Games.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7BD80A0026D4FC9D00EAC164 /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,6 +100,7 @@
 				7BBDB18E26CA8EF2002679C6 /* MutateTests */,
 				7BBDB19926CA8EF2002679C6 /* MutateUITests */,
 				7BBDB17626CA8EEB002679C6 /* Products */,
+				7BD809FB26D4EC1700EAC164 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -114,6 +120,7 @@
 				7BBDB17826CA8EEB002679C6 /* AppDelegate.swift */,
 				7BBDB17A26CA8EEB002679C6 /* SceneDelegate.swift */,
 				7BBDB17C26CA8EEB002679C6 /* ContentView.swift */,
+				7BD809FE26D4EEA500EAC164 /* Games.swift */,
 				7BBDB1AA26CA9562002679C6 /* GameView.swift */,
 				7BBDB1AE26CADCDE002679C6 /* GameView2.swift */,
 				7BBDB1B226CBFEFC002679C6 /* GameView3.swift */,
@@ -152,6 +159,14 @@
 				7BBDB19C26CA8EF2002679C6 /* Info.plist */,
 			);
 			path = MutateUITests;
+			sourceTree = "<group>";
+		};
+		7BD809FB26D4EC1700EAC164 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7BD809FC26D4EC1700EAC164 /* GameKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -289,6 +304,7 @@
 				7BBDB1B526CCF80A002679C6 /* Fonts.swift in Sources */,
 				7BBDB17926CA8EEB002679C6 /* AppDelegate.swift in Sources */,
 				7BBDB1AF26CADCDE002679C6 /* GameView2.swift in Sources */,
+				7BD809FF26D4EEA500EAC164 /* Games.swift in Sources */,
 				7BBDB17B26CA8EEB002679C6 /* SceneDelegate.swift in Sources */,
 				7BBDB1AB26CA9562002679C6 /* GameView.swift in Sources */,
 				7BBDB1B326CBFEFC002679C6 /* GameView3.swift in Sources */,
