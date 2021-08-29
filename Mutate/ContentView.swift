@@ -72,7 +72,7 @@ struct ContentView: View {
       Color.black
       switch menu {
       case "game":
-        MatchMaker()
+        MatchMaker().zIndex(1)
       case "design":
         VStack {
           TopOfGrid().zIndex(1)
@@ -193,16 +193,45 @@ struct ContentView: View {
   }
 }
 
+class Multiple {
+//  var runB = PassthroughSubject<Void,Never>()
+//  var sendB = PassthroughSubject<Void,Never>()
+//  var printB = PassthroughSubject<Void,Never>()
+  var command = PassthroughSubject<String,Never>()
+  static var shared = Multiple()
+}
+
+
 struct MatchMaker: View {
+  
+  var runner = Multiple.shared
+  
   var body: some View {
     Text("matchmaker")
-      .font(Fonts.touchOfNature(size: textSize))
+      .font(Fonts.touchOfNature(size: 64))
       .foregroundColor(Color.white)
-//      .onAppear {
-//        let newGame = GameViewController()
-//        newGame.authenticatePlayer()
-//      }
-    GameView()
+      .onTapGesture {
+//        runner.runB.send()
+        runner.command.send("runB")
+      }
+      .padding()
+    Text("sendMatch")
+      .font(Fonts.touchOfNature(size: 32))
+      .foregroundColor(Color.white)
+      .onTapGesture {
+//        runner.sendB.send()
+        runner.command.send("sendB")
+      }.offset(x: 0, y: 128)
+    Text("sendMessage")
+      .font(Fonts.touchOfNature(size: 32))
+      .foregroundColor(Color.white)
+      .onTapGesture {
+//        runner.printB.send()
+        runner.command.send("printB")
+      }.offset(x: 0, y: -128)
+    GameView().zIndex(0)
+      
+      
   }
 }
 
