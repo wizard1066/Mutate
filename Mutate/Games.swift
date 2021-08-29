@@ -255,7 +255,7 @@ extension SimpleViewController: GKMatchDelegate, UINavigationControllerDelegate,
 ////      try? match.send(justYou!, to: players, dataMode: .reliable)
 //      print("justYou")
 //      sleep(1)
-//      self.dismiss(animated: true)
+        self.dismiss(animated: true)
 //
 //      print("matchmakerViewController ")
 
@@ -277,15 +277,22 @@ extension SimpleViewController: GKMatchDelegate, UINavigationControllerDelegate,
     
     func matchmakerViewControllerWasCancelled(_ viewController: GKMatchmakerViewController) {
         print("matchmakerViewControllerWasCancelled")
+        let multiple = Multiple.shared
+        multiple.alertView.send(("connection Cancelled","connection Cancelled"))
     }
     
     func matchmakerViewController(_ viewController: GKMatchmakerViewController, didFailWithError error: Error) {
         print("Matchmaker vc did fail with error: \(error.localizedDescription).")
+        let multiple = Multiple.shared
+        multiple.alertView.send(("didFailWithError",String(error.localizedDescription)))
     }
     
   func match(_ match: GKMatch, player: GKPlayer, didChange state: GKPlayerConnectionState) {
     AudioServicesPlaySystemSound(1054)
     print("didChange")
+    let multiple = Multiple.shared
+    multiple.alertView.send(("didChange",String(state.rawValue)))
+    
   }
   
   func match(_ match: GKMatch, didFailWithError error: Error?) {
@@ -302,10 +309,6 @@ extension SimpleViewController: GKMatchDelegate, UINavigationControllerDelegate,
       // try match.send("justYou".data(using: .utf8)!, to: players, dataMode: .reliable)
       let decoded = String(data: data, encoding: String.Encoding.utf8)
       print("didReceive forRecipient fromRemotePlayer",decoded,player)
-//      let meToo = "meToo".data(using: .utf8)
-////      if player != GKLocalPlayer.local {
-//        try? match.send(meToo!, to: [player], dataMode: .reliable)
-//      }
   }
   
   func match(_ match: GKMatch, didReceive data: Data, forRecipient recipient: GKPlayer, fromRemotePlayer player: GKPlayer) {

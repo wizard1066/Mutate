@@ -198,6 +198,7 @@ class Multiple {
 //  var sendB = PassthroughSubject<Void,Never>()
 //  var printB = PassthroughSubject<Void,Never>()
   var command = PassthroughSubject<String,Never>()
+  var alertView = PassthroughSubject<(String,String),Never>()
   static var shared = Multiple()
 }
 
@@ -206,27 +207,34 @@ struct MatchMaker: View {
   
   var runner = Multiple.shared
   
+  @State var showAlert = false
+  @State var title = ""
+  @State var message = ""
+  
   var body: some View {
     Text("matchmaker")
       .font(Fonts.touchOfNature(size: 64))
       .foregroundColor(Color.white)
       .onTapGesture {
-//        runner.runB.send()
         runner.command.send("runB")
       }
       .padding()
+      .onReceive(runner.alertView) { words in
+        (title,message) = words
+        showAlert = true
+      }.alert(isPresented: $showAlert) { () -> Alert in
+        Alert(title: Text(title), message: Text(message))
+      }
     Text("sendMatch")
       .font(Fonts.touchOfNature(size: 32))
       .foregroundColor(Color.white)
       .onTapGesture {
-//        runner.sendB.send()
         runner.command.send("sendB")
       }.offset(x: 0, y: 128)
     Text("sendMessage")
       .font(Fonts.touchOfNature(size: 32))
       .foregroundColor(Color.white)
       .onTapGesture {
-//        runner.printB.send()
         runner.command.send("printB")
       }.offset(x: 0, y: -128)
     GameView().zIndex(0)
